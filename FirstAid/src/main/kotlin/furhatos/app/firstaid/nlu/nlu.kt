@@ -51,6 +51,18 @@ class Wound : Intent() {
     }
 }
 
+class Graze : Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("graze", "guys", "gays", "grace", "gaze", "gace")
+    }
+}
+
+class Bite : Intent() {
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("bite", "byte", "B")
+    }
+}
+
 class OpenWounds(var wounds: Woundtypes? = null) : Intent(){
     override fun getExamples(lang: Language): List<String> {
         return listOf("@wounds", "they have @wounds", "they have a @wounds")
@@ -60,7 +72,7 @@ class OpenWounds(var wounds: Woundtypes? = null) : Intent(){
 // wound entity
 class Woundtypes : EnumEntity(stemming = true, speechRecPhrases = true) {
     override fun getEnum(lang: Language): List<String> {
-        return listOf("infected", "leaking", "bite", "laceration", "gaze")
+        return listOf("infected", "leaking", "bite", "laceration", "graze")
     }
 }
 

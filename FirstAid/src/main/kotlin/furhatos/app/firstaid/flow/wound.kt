@@ -109,10 +109,12 @@ val Options = state(Interaction){
             furhat.say("If the leaking doesn't decrease, call 112 and make sure " +
                     "your patient receives more help.")
         }
+        furhat.say("Watch for signs of possible infections and if they " +
+                "appear call a doctor immediately.")
         reentry()
     }
 
-    onResponse("bite") {
+    onResponse<Bite> {
         val bite = furhat.askYN("Has the bite broken the skin?")
         if(bite == true){
             furhat.say("Call 112 and immediately seek more help.")
@@ -132,7 +134,7 @@ val Options = state(Interaction){
         reentry()
     }
 
-    onResponse("graze") {
+    onResponse<Graze> {
         val infec = furhat.askYN("Is the graze wound infected?")
         if(infec == true){
             call(Infected())
@@ -146,6 +148,8 @@ val Options = state(Interaction){
                 call(Ready())
                 furhat.say("If the bleeding becomes significantly worse call for medical help.")
             }
+            furhat.say("Watch for signs of possible infections and if they " +
+                    "appear call a doctor immediately.")
         }
         reentry()
     }
@@ -201,7 +205,7 @@ val KindOfWound : State = state(parent = Options) {
     onReentry {
         var wounds = furhat.askYN ( "Does you patient experience any other open wounds in need of treatment?" )
         if (wounds == true){
-            furhat.ask("What other types of wounds ${Woundtypes().getEnum(Language.ENGLISH_US).joinToString(", ")} does you patient experience?")
+            furhat.ask("What other types of wounds does you patient experience?")
         }else{
             furhat.say("Happy to be of service! Let me know if I can help you with anything else.")
         }
