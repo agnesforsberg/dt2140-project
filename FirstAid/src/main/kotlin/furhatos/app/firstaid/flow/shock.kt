@@ -1,5 +1,7 @@
 package furhatos.app.firstaid.flow
 
+import furhatos.app.firstaid.nlu.Ready
+import furhatos.app.firstaid.nlu.Repeat
 import furhatos.flow.kotlin.*
 import furhatos.nlu.common.*
 
@@ -19,7 +21,7 @@ val ExplainShock1 : State = state(Interaction) {
     }
 
     onResponse<No> {
-        var shock = furhat.askYN("Do you think your patient is experiencing shock?")
+        val shock = furhat.askYN("Do you think your patient is experiencing shock?")
         if(shock == true){
             goto(ShockStartState)
         }else {
@@ -39,7 +41,7 @@ val ExplainShock2 : State = state(Interaction) {
     }
 
     onResponse<No> {
-        var shock = furhat.askYN("Do you think your patient is experiencing shock?")
+        val shock = furhat.askYN("Do you think your patient is experiencing shock?")
         if(shock == true){
             goto(ShockStartState)
         }else {
@@ -51,7 +53,7 @@ val ExplainShock2 : State = state(Interaction) {
 val ExplainShock3 : State = state(Interaction) {
     onEntry {
         furhat.say("The symptoms are: enlarged pupils, weakness or fatigue, dizziness or fainting, anxiousness or agitation.")
-        var shock = furhat.askYN("Do you think your patient is experiencing shock?")
+        val shock = furhat.askYN("Do you think your patient is experiencing shock?")
         if(shock == true){
             goto(ShockStartState)
         }else {
@@ -72,7 +74,7 @@ val ShockStartState : State = state(Interaction) {
         goto(ShockPart1)
     }
 
-    onResponse("Ready") {
+    onResponse<Ready> {
         goto(ShockPart1)
     }
 
@@ -82,107 +84,107 @@ val ShockStartState : State = state(Interaction) {
     }
 }
 
-val ShockPart1 : State = state(Interaction) {
+val ShockPart : State = state(Interaction) {
+    onResponse<Repeat> {
+        reentry()
+    }
+
+    onNoResponse {
+        furhat.say("Let me know when you are ready for the next step.")
+        furhat.listen()
+    }
+}
+
+val ShockPart1 : State = state(parent= ShockPart) {
     onEntry {
         furhat.say("Lay the person down and elevate the legs and feet slightly, unless you think this may cause pain or further injury.")
         furhat.say("Let me know when you are ready for the next step.")
         furhat.listen()
     }
 
-    onResponse("Ready", "Yes", "Next") {
+    onResponse<Ready> {
         goto(ShockPart2)
-    }
-
-    onResponse("Repeat") {
-        reentry()
-    }
-
-    onNoResponse {
-        furhat.say("Let me know when you are ready for the next step.")
     }
 }
 
-val ShockPart2: State = state(Interaction) {
+val ShockPart2: State = state(parent= ShockPart) {
     onEntry {
         furhat.say("Keep the person still and don't move him or her unless necessary.")
         furhat.say("Begin CPR if the person shows no signs of life, such as not breathing, coughing or moving. In this case, call 112!")
         furhat.listen()
     }
 
-    onResponse("Ready", "Yes", "Next") {
+    onResponse<Ready> {
         goto(ShockPart3)
-    }
-
-    onResponse("Repeat") {
-        reentry()
-    }
-
-    onNoResponse {
-        furhat.say("Let me know when you are ready for the next step.")
     }
 }
 
-val ShockPart3: State = state(Interaction) {
+val ShockPart3: State = state(parent= ShockPart) {
     onEntry {
-        furhat.say("If you suspect that the person is having an allergic reaction, and you have access to an " +
-                "epinephrine autoinjector, use it according to its instructions.")
+        furhat.ask("Do you suspect that the person is having an allergic reaction?")
+    }
+
+    onResponse<Yes> {
+        val injector = furhat.askYN("Do you have access to an epinephrine auto injector?")
+        if(injector == true){
+            furhat.say("Use it according to the instructions.")
+        } else {
+            furhat.say("Check if someone in your surrounding has one. Otherwise call 112!")
+        }
         furhat.listen()
     }
 
-    onResponse("Ready", "Yes", "Next") {
+    onResponse<No> {
         goto(ShockPart4)
     }
 
-    onResponse("Repeat") {
-        reentry()
-    }
-
-    onNoResponse {
-        furhat.say("Let me know when you are ready for the next step.")
+    onResponse<Ready> {
+        goto(ShockPart4)
     }
 }
 
-val ShockPart4: State = state(Interaction) {
+val ShockPart4: State = state(parent= ShockPart) {
     onEntry {
-        furhat.say("If the person is bleeding, hold pressure over the bleeding area, using a towel or sheet.")
-        furhat.listen()
+        val bleeding = furhat.askYN("Is the person bleeding?")
+        if(bleeding == true) {
+            furhat.say("Hold pressure over the bleeding area. You can use a towel, sheet or clothing.")
+            furhat.listen()
+        }else {
+            goto(ShockPart5)
+        }
     }
 
-    onResponse("Ready", "Yes", "Next") {
+    onResponse<Ready> {
         goto(ShockPart5)
     }
+}
 
-    onResponse("Repeat") {
-        reentry()
+val ShockPart5: State = state(parent= ShockPart) {
+    onEntry {
+        val vomiting = furhat.askYN("Is the person vomiting or bleeding from the mouth?")
+        if(vomiting == true ){
+            furhat.say("If no spinal injury is suspected, turn them onto a side to prevent choking.")
+            furhat.say("If you suspect spinal injury do not move them as that can worsen the injury.")
+            furhat.listen()
+        }else {
+            goto(ShockEnding)
+        }
     }
 
-    onNoResponse {
-        furhat.say("Let me know when you are ready for the next step.")
+    onResponse<Ready> {
+        goto(ShockEnding)
     }
 }
 
-val ShockPart5: State = state(Interaction) {
+val ShockEnding: State = state(Interaction) {
     onEntry {
-        furhat.say("If the person vomits or begins bleeding from the mouth, and no spinal injury is suspected, " +
-                "turn him or her onto a side to prevent choking.")
-        furhat.listen()
-    }
-
-    onResponse("Ready", "Yes", "Next") {
-        furhat.say("These are all the steps.")
-        var again = furhat.askYN("Do you want to hear the steps again?")
+        furhat.say("Those are all the steps.")
+        furhat.say("If the person is still showing symptoms, call 112.")
+        val again = furhat.askYN("Do you want to hear the steps again?")
         if(again == true){
             goto(ShockPart1)
         }else {
             goto(MoreHelp)
         }
-    }
-
-    onResponse("Repeat") {
-        reentry()
-    }
-
-    onNoResponse {
-        furhat.say("Let me know when you are ready for the next step.")
     }
 }

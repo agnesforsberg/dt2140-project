@@ -22,7 +22,7 @@ class ExplainEmergency(var emergeny : Emergencies? = null) : Intent() {
 
 class Ready : Intent(){
     override fun getExamples(lang: Language): List<String> {
-        return listOf("Ready","I'm ready", "lets go", "continue", "Done", "finished")
+        return listOf("Ready","I'm ready", "lets go", "continue", "Done", "finished", "next")
     }
 }
 
@@ -40,11 +40,11 @@ class DontKnow : Intent() {
 
 class Shock : Intent() {
     override fun getExamples(lang: Language): List<String> {
-        return listOf("shock", "my patient has shock", "they are shocked")
+        return listOf("shock", "my patient has shock", "they are shocked", "they have shock", "shocked")
     }
 }
 
-class Wound : Intent() {
+class Wound(var woundTypes: Woundtypes? = null) : Intent() {
     override fun getExamples(lang: Language): List<String> {
         return listOf("wound", "bleeding", "they are bleeding", "they have a wound", "my patient has a wound",
                 "my patient is bleeding", "the wound is @woundTypes")
