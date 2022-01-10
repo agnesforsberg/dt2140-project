@@ -8,6 +8,7 @@ import furhatos.util.Language
 
 val WoundStartState : State = state(Interaction) {
     onEntry {
+        furhat.say("I will walk you through the steps of treating wounds.")
         furhat.say("Start with washing your hands with water and soap if possible.")
         furhat.say("Avoid touching the wound with your fingers while" +
                 " treating the wound. If possible, use disposable gloves.")
