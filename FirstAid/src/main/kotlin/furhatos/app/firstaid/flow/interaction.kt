@@ -37,9 +37,17 @@ val Start : State = state(Interaction) {
         }
     }
 
+    onResponse<Wound> {
+        goto(WoundStartState)
+    }
+
+    onResponse<Shock> {
+        goto(ShockStartState)
+    }
+
     onResponse {
         furhat.say("I didn't understand. I can only help with wounds or shock.")
-        furhat.ask("Is your patient experiencing shock?")
+        furhat.ask("Which do you need help with?")
     }
 
     onNoResponse {
@@ -76,6 +84,11 @@ val MoreHelp : State = state(Interaction) {
     onResponse {
         furhat.say("I didn't understand. I can only help with shock or wounds.")
         furhat.ask("Which one do you need help with?")
+    }
+
+    onResponse<No> {
+        furhat.say("Come back if you need more help. Good bye!")
+        exit()
     }
 
     onNoResponse {
