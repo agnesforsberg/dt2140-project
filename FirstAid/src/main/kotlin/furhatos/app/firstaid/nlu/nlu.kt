@@ -22,7 +22,8 @@ class ExplainEmergency(var emergeny : Emergencies? = null) : Intent() {
 
 class Ready : Intent(){
     override fun getExamples(lang: Language): List<String> {
-        return listOf("Ready","I'm ready", "lets go", "continue", "Done", "finished", "next")
+        return listOf("Ready","I'm ready", "lets go", "continue", "Done", "finished", "next", "next step",
+        "ready for the next step")
     }
 }
 
@@ -34,7 +35,7 @@ class Repeat : Intent(){
 
 class DontKnow : Intent() {
     override fun getExamples(lang: Language): List<String> {
-        return listOf("I don't know", "Maybe", "Possibly", "I'm not sure", "What does it mean?")
+        return listOf("don't know", "I don't know", "Maybe", "Possibly", "I'm not sure", "What does it mean?")
     }
 }
 

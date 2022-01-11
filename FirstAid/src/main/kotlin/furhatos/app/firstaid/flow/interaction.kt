@@ -53,18 +53,6 @@ val Start : State = state(Interaction) {
     onNoResponse {
         reentry()
     }
-
-    onUserGesture(UserGestures.Smile) {
-        furhat.gesture(Gestures.BigSmile)
-    }
-
-    onUserAttend(instant = true) {user ->
-        if (user.isAttendingFurhat()) {
-            println("User ${user.id} is now attending Furhat")
-        } else {
-            println("User ${user.id} is now attending somewhere else")
-        }
-    }
 }
 
 val MoreHelp : State = state(Interaction) {
@@ -81,14 +69,14 @@ val MoreHelp : State = state(Interaction) {
         goto(WoundStartState)
     }
 
-    onResponse {
-        furhat.say("I didn't understand. I can only help with shock or wounds.")
-        furhat.ask("Which one do you need help with?")
-    }
-
     onResponse<No> {
         furhat.say("Come back if you need more help. Good bye!")
         exit()
+    }
+
+    onResponse {
+        furhat.say("I didn't understand. I can only help with shock or wounds.")
+        furhat.ask("Which one do you need help with?")
     }
 
     onNoResponse {
