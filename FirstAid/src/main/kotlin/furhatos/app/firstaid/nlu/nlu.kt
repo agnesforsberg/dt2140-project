@@ -64,9 +64,15 @@ class Bite : Intent() {
     }
 }
 
-class OpenWounds(var wounds: Woundtypes? = null) : Intent(){
+class OpenWounds : Intent(){
     override fun getExamples(lang: Language): List<String> {
-        return listOf("@wounds", "they have @wounds", "they have a @wounds")
+        return listOf("open", "open wound", "it's open", "they have an open wound")
+    }
+}
+
+class ClosedWounds : Intent(){
+    override fun getExamples(lang: Language): List<String> {
+        return listOf("closed", "closed wound", "it's closed", "they have a closed wound")
     }
 }
 

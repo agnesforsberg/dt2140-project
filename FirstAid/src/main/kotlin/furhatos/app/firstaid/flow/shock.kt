@@ -233,13 +233,18 @@ val ShockEnding: State = state(Interaction) {
 
 val CheckAttention: State = state(Interaction) {
     onEntry {
-        furhat.say("Can you look at me?")
         furhat.attend(users.other)
+        furhat.ask("Can you look at me?")
         //furhat.glance(users.other, 3000)
     }
 
     onResponse<Yes> {
-        furhat.say("Please look at me.")
+        if(users.current.isAttendingFurhat() ){
+            furhat.say("That is a good sign. I will now perform the next check.")
+            goto(CheckCanSmile)
+        }else {
+            furhat.ask("Can you look at me?")
+        }
     }
 
     onResponse<No> {
@@ -249,13 +254,11 @@ val CheckAttention: State = state(Interaction) {
     }
 
     onUserAttend(instant = true) {user ->
-        if (user.isAttendingFurhat() && (user.id !== users.current.id)) {
+        if (user.isAttendingFurhat() && (user.id == users.current.id)) {
             furhat.say("That is a good sign. I will now perform the next check.")
-            furhat.attend(users.other)
             goto(CheckCanSmile)
-        } else if (user.isAttendingFurhat() && (user.id == users.current.id)) {
-            furhat.say("I want the patient to look at me.")
-            furhat.ask("Can the patient look at me?")
+        } else {
+            print("not looking")
         }
     }
 
@@ -281,7 +284,6 @@ val CheckCanSmile: State = state(Interaction) {
 
     onEntry {
         furhat.say("It's a good sign to be able to smile. Can you smile?")
-        furhat.attend(users.other)
     }
 
     onUserGesture(UserGestures.Smile) {

@@ -14,6 +14,10 @@ val Start : State = state(Interaction) {
         furhat.ask("Hello, I can help you with treating shock or wounds. Is your patient experiencing shock?")
     }
 
+    onReentry {
+        furhat.ask("I can help with shock or wounds. Please repeat what you need help with.")
+    }
+
     onResponse<Yes>{
         goto(ShockStartState)
     }
@@ -32,8 +36,7 @@ val Start : State = state(Interaction) {
         if(explainShock == true){
             goto(ExplainShock1)
         }else {
-            // TODO what do we do here?
-            exit()
+            reentry()
         }
     }
 
@@ -43,6 +46,11 @@ val Start : State = state(Interaction) {
 
     onResponse<Shock> {
         goto(ShockStartState)
+    }
+
+    onResponse("Goodbye") {
+        furhat.say("Come back if you need help.")
+        exit()
     }
 
     onResponse {
