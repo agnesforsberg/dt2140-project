@@ -4,7 +4,6 @@ import furhatos.app.firstaid.nlu.*
 import furhatos.app.firstaid.nlu.DontKnow
 import furhatos.flow.kotlin.*
 import furhatos.nlu.common.*
-import furhatos.util.Language
 
 val WoundStartState : State = state(Interaction) {
     onEntry {
@@ -30,11 +29,11 @@ val OpenOrClosed : State = state(Interaction) {
         reentry()
     }
 
-    onResponse("Open") {
+    onResponse<OpenWounds> {
         goto(OpenWound)
     }
 
-    onResponse("Closed") {
+    onResponse<ClosedWounds> {
         goto(ClosedWound)
     }
 
@@ -117,5 +116,6 @@ val EndClosed : State = state(Interaction){
     }
     onResponse<No>{
         furhat.say("Let me know if I can help you with anything else.")
+        goto(Start)
     }
 }
