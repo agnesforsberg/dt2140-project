@@ -167,7 +167,7 @@ val KindOfWound : State = state(parent = Options) {
             furhat.ask("What other types of wounds does you patient experience?")
         }else{
             furhat.say("Happy to be of service! Let me know if I can help you with anything else.")
-            goto(Start)
+            goto(MoreHelp)
         }
     }
 

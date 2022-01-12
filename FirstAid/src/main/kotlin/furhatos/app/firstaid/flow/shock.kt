@@ -70,8 +70,8 @@ val ShockStartState : State = state(Interaction) {
     }
 
     onResponse<Yes> {
-        //goto(ShockPart1)
-        goto(CheckAttentionStart)
+        goto(ShockPart1)
+        //goto(CheckAttentionStart)
     }
 
     onResponse<Ready> {
