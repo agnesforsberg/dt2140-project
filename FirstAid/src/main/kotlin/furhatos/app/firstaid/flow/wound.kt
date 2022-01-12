@@ -116,6 +116,6 @@ val EndClosed : State = state(Interaction){
     }
     onResponse<No>{
         furhat.say("Let me know if I can help you with anything else.")
-        goto(Start)
+        goto(MoreHelp)
     }
 }
