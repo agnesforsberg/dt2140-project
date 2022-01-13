@@ -47,7 +47,7 @@ val OpenOrClosed : State = state(Interaction) {
 
 fun ready() : State = state(Interaction){
     onEntry {
-        furhat.ask ( "Tell me when you are ready for the next step" )
+        furhat.ask ( "Tell me when you are ready for the next step", 5000)
     }
     onResponse<Ready> {
         terminate()
