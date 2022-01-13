@@ -22,8 +22,8 @@ class ExplainEmergency(var emergeny : Emergencies? = null) : Intent() {
 
 class Ready : Intent(){
     override fun getExamples(lang: Language): List<String> {
-        return listOf("Ready","I'm ready", "lets go", "continue", "Done", "finished", "next", "next step",
-        "ready for the next step")
+        return listOf("Ready","I'm ready", "let's go", "continue", "Done", "finished", "next", "next step",
+        "ready for the next step", "okay", "and then", "then what?")
     }
 }
 

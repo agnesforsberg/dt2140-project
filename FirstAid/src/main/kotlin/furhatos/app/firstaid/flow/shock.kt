@@ -88,7 +88,7 @@ val ShockPart : State = state(Interaction) {
 
     onNoResponse {
         furhat.say("Let me know when you are ready for the next step.")
-        furhat.listen()
+        furhat.listen(5000)
     }
 }
 
@@ -98,7 +98,7 @@ val ShockPart1 : State = state(parent= ShockPart) {
                 "unless you think this may cause pain or further injury.")
         furhat.say("Do not let the person eat or drink anything.")
         furhat.say("Let me know when you are ready for the next step.")
-        furhat.listen()
+        furhat.listen(5000)
     }
 
     onResponse<Ready> {
