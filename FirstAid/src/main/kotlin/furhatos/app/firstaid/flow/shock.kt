@@ -174,18 +174,11 @@ val ShockPart5: State = state(parent= ShockPart) {
             furhat.say("If you suspect spinal injury do not move them as that can worsen the injury.")
             furhat.listen()
         }else {
-            goto(ShockFurhatChecks)
+            goto(ShockEnding)
         }
     }
 
     onResponse<Ready> {
-        goto(ShockFurhatChecks)
-    }
-}
-
-val ShockFurhatChecks: State = state(Interaction) {
-    onEntry {
-        furhat.say("I will now perform some checks on the patient's level of consciousness.")
         goto(ShockEnding)
     }
 }
@@ -194,7 +187,7 @@ val ShockEnding: State = state(Interaction) {
     onEntry {
         furhat.say("Those are all the steps.")
         furhat.say("If the person is still showing symptoms, call 112.")
-        val again = furhat.askYN("Do you want to hear the steps again?")
+        val again = furhat.askYN("Do you want to hear the steps for shock again?")
         if(again == true){
             goto(ShockPart1)
         }else {

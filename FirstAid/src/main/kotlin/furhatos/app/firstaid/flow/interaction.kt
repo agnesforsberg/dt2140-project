@@ -50,7 +50,7 @@ val Start : State = state(Interaction) {
 
     onResponse("Goodbye") {
         furhat.say("Come back if you need help.")
-        exit()
+        goto(Idle)
     }
 
     onResponse {
@@ -79,7 +79,12 @@ val MoreHelp : State = state(Interaction) {
 
     onResponse<No> {
         furhat.say("Come back if you need more help. Good bye!")
-        exit()
+        goto(Idle)
+    }
+
+    onResponse("Nothing", "I don't need help") {
+        furhat.say("Come back if you need more help. Good bye!")
+        goto(Idle)
     }
 
     onResponse {
@@ -88,6 +93,6 @@ val MoreHelp : State = state(Interaction) {
     }
 
     onNoResponse {
-        exit()
+        goto(Idle)
     }
 }
