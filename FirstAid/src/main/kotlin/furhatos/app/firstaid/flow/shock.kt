@@ -5,6 +5,7 @@ import furhatos.app.firstaid.nlu.Ready
 import furhatos.app.firstaid.nlu.Repeat
 import furhatos.flow.kotlin.*
 import furhatos.nlu.common.*
+import furhatos.skills.emotions.UserGestures
 
 val ExplainShock1 : State = state(Interaction) {
 
@@ -174,12 +175,19 @@ val ShockPart5: State = state(parent= ShockPart) {
             furhat.say("If you suspect spinal injury do not move them as that can worsen the injury.")
             furhat.listen()
         }else {
-            goto(ShockEnding)
+            goto(ShockFurhatChecks)
         }
     }
 
     onResponse<Ready> {
-        goto(ShockEnding)
+        goto(ShockFurhatChecks)
+    }
+}
+
+val ShockFurhatChecks: State = state(Interaction) {
+    onEntry {
+        furhat.say("I will now perform some checks on the patient's level of consciousness.")
+        goto(CheckAttentionStart)
     }
 }
 
@@ -196,11 +204,11 @@ val ShockEnding: State = state(Interaction) {
     }
 }
 
-/*val CheckAttentionStart: State = state(Interaction) {
-    *//** This state checks if the patient is conscious enough to look at the furhat, as not having a steady gaze
+val CheckAttentionStart: State = state(Interaction) {
+    /** This state checks if the patient is conscious enough to look at the furhat, as not having a steady gaze
      * can be a sign of severe shock. To do this the attention is moved from the helper, talking user,
      * to another person. This assumes that there is another person, so if the helper is helping itself it will
-     * not work. *//*
+     * not work. */
     onEntry {
         furhat.say("I will check if the patient can direct their gaze to me.")
         furhat.ask("Make sure only you and the patient are close to me. Are you ready?")
@@ -271,9 +279,9 @@ val CheckAttention: State = state(Interaction) {
 }
 
 val CheckCanSmile: State = state(Interaction) {
-    *//** This state checks if the patient can smile. A smile is a simple gesture that every person
+    /** This state checks if the patient can smile. A smile is a simple gesture that every person
      * can do. Therefor this check can indicate a lack in muscle control, hearing or a lower level of consciousness.
-     * If the patient can not smile it is good to perform more checks to know which is the case. *//*
+     * If the patient can not smile it is good to perform more checks to know which is the case. */
 
     onEntry {
         furhat.say("It's a good sign to be able to smile. Can you smile?")
@@ -299,4 +307,4 @@ val CheckCanSmile: State = state(Interaction) {
         furhat.glance(users.other, 2000)
         furhat.say("Can you show me a smile?")
     }
-}*/
+}
